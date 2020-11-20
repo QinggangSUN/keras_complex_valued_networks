@@ -36,4 +36,3 @@ author    = {Dramsch, Jesper S{\"o}ren and Contributors},
 [Complex-Valued MRI Reconstruction - Unrolled Architecture](https://github.com/MRSRL/complex-networks-release)  
 [Complex ResNet Aided DoA Estimation for Near-Field MIMO Systems](https://arxiv.org/abs/2007.10590)
 
-
