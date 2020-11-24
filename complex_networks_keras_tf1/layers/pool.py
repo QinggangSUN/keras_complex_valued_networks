@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""Complex valued pooling layer."""
+
 # Authors: Qinggang Sun
 #
 # Reference:
@@ -11,7 +13,9 @@
 #     https://github.com/zengjie617789/keras-complex
 #
 
-import keras
+# pylint:disable=too-many-arguments, invalid-name, bad-whitespace, inconsistent-return-statements
+# pylint:disable=no-else-return, arguments-differ, redefined-outer-name, abstract-method, c-extension-no-member
+
 import keras.backend                        as KB
 import keras.engine                         as KE
 import keras.layers                         as KL
@@ -23,6 +27,7 @@ from .activations import complex_to_real_imag, real_imag_to_complex
 #
 
 class SpectralPooling1D(KL.Layer):
+    """SpectralPooling1D"""
     def __init__(self, topf=None, gamma=None, **kwargs):
         super(SpectralPooling1D, self).__init__(**kwargs)
         if topf:
@@ -66,6 +71,7 @@ class SpectralPooling1D(KL.Layer):
         return x
 
 class SpectralPooling2D(KL.Layer):
+    """SpectralPooling2D"""
     def __init__(self, topf=None, gamma=None, **kwargs):
         super(SpectralPooling2D, self).__init__(**kwargs)
         if topf:
@@ -309,6 +315,7 @@ class _ComplexPooling3D(_ComplexPooling):
         return dict(list(base_config.items()) + list(config.items()))
 
 class ComplexMaxPooling1D(_ComplexPooling1D):
+    """ComplexMaxPooling1D"""
     def __init__(self, pool_size=(2,), strides=(1,), padding='same', data_format='channels_last', **kwargs):
         super(ComplexMaxPooling1D, self).__init__(pool_size, strides, padding,
                                                   data_format, **kwargs)
@@ -322,6 +329,7 @@ class ComplexMaxPooling1D(_ComplexPooling1D):
         return outputs
 
 class ComplexMaxPooling2D(_ComplexPooling2D):
+    """ComplexMaxPooling2D"""
     def __init__(self, pool_size=(2, 2), strides=(1, 1), padding='same', data_format='channels_last', **kwargs):
         super(ComplexMaxPooling2D, self).__init__(pool_size, strides, padding,
                                                   data_format, **kwargs)
@@ -335,6 +343,7 @@ class ComplexMaxPooling2D(_ComplexPooling2D):
         return outputs
 
 class ComplexMaxPooling3D(_ComplexPooling3D):
+    """ComplexMaxPooling3D"""
     def __init__(self, pool_size=(2, 2, 2), strides=(1, 1, 1), padding='same', data_format='channels_last', **kwargs):
         super(ComplexMaxPooling3D, self).__init__(pool_size, strides, padding,
                                                   data_format, **kwargs)
@@ -348,6 +357,7 @@ class ComplexMaxPooling3D(_ComplexPooling3D):
         return outputs
 
 class ComplexAveragePooling1D(_ComplexPooling1D):
+    """ComplexAveragePooling1D"""
     def __init__(self, pool_size=(2,), strides=(1,), padding='same', data_format='channels_last', **kwargs):
         super(ComplexAveragePooling1D, self).__init__(pool_size, strides, padding,
                                                       data_format, **kwargs)
@@ -361,6 +371,7 @@ class ComplexAveragePooling1D(_ComplexPooling1D):
         return outputs
 
 class ComplexAveragePooling2D(_ComplexPooling2D):
+    """ComplexAveragePooling2D"""
     def __init__(self, pool_size=(2, 2), strides=(1, 1), padding='same', data_format='channels_last', **kwargs):
         super(ComplexAveragePooling2D, self).__init__(pool_size, strides, padding,
                                                       data_format, **kwargs)
@@ -374,6 +385,7 @@ class ComplexAveragePooling2D(_ComplexPooling2D):
         return outputs
 
 class ComplexAveragePooling3D(_ComplexPooling3D):
+    """ComplexAveragePooling3D"""
     def __init__(self, pool_size=(2, 2, 2), strides=(1, 1, 1), padding='same', data_format='channels_last', **kwargs):
         super(ComplexAveragePooling3D, self).__init__(pool_size, strides, padding,
                                                       data_format, **kwargs)

@@ -27,6 +27,10 @@ author    = {Dramsch, Jesper S{\"o}ren and Contributors},
 
 [Keras-ResNet](https://github.com/broadinstitute/keras-resnet)
 
+[DenseNet](https://arxiv.org/pdf/1608.06993v3.pdf)
+
+[Dense Net in Keras](https://github.com/titu1994/DenseNet)
+
 #  Related works
 [Deep Complex Networks (ICLR 2018)](https://arxiv.org/abs/1705.09792)  
 [On Complex Valued Convolutional Neural Networks](https://arxiv.org/abs/1602.09046)  
@@ -34,6 +38,5 @@ author    = {Dramsch, Jesper S{\"o}ren and Contributors},
 [Complex-Valued_Networks](https://github.com/wangyifan1027/Complex-Valued_Networks)  
 [Deep Complex Networks](https://github.com/Doyosae/Deep_Complex_Networks)  
 [Complex-Valued MRI Reconstruction - Unrolled Architecture](https://github.com/MRSRL/complex-networks-release)  
-[Complex ResNet Aided DoA Estimation for Near-Field MIMO Systems](https://arxiv.org/abs/2007.10590)
-
-
+[Complex ResNet Aided DoA Estimation for Near-Field MIMO Systems](https://arxiv.org/abs/2007.10590)  
+Li W., Xie W., Wang Z. (2020) Complex-Valued Densely Connected Convolutional Networks. In: Zeng J., Jing W., Song X., Lu Z. (eds) Data Science. ICPCSEE 2020. Communications in Computer and Information Science, vol 1257. Springer, Singapore. https://doi.org/10.1007/978-981-15-7981-3_21

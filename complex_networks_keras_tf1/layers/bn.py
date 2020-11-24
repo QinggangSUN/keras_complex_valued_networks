@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable=C0301,C0111
-# flake8: noqa
+
+"""Complex valued batch normalization."""
 
 #
 # Authors: Chiheb Trabelsi, Olexa Bilaniuk
@@ -11,18 +11,24 @@
 #       available here:
 #       https://github.com/fchollet/keras/blob/master/keras/layers/normalization.py
 
+# pylint: disable=bad-whitespace, invalid-name, too-many-arguments, too-many-locals, no-else-return, line-too-long
+# pylint: disable=too-many-instance-attributes, too-many-branches, attribute-defined-outside-init, arguments-differ
+# flake8: noqa
+
 import numpy as np
 from keras.layers import Layer, InputSpec
 from keras import initializers, regularizers, constraints
 import keras.backend as K
 
 
-def sqrt_init(shape, dtype=None):
+def sqrt_init(shape):
+    """sqrt_init"""
     value = (1 / np.sqrt(2)) * K.ones(shape)
     return value
 
 
 def sanitizedInitGet(init):
+    """sanitizedInitGet"""
     if init in ["sqrt_init"]:
         return sqrt_init
     else:
@@ -30,6 +36,7 @@ def sanitizedInitGet(init):
 
 
 def sanitizedInitSer(init):
+    """sanitizedInitSer"""
     if init in [sqrt_init]:
         return "sqrt_init"
     else:
@@ -464,6 +471,7 @@ class ComplexBatchNormalization(Layer):
             self.add_update(update_list, inputs)
 
             def normalize_inference():
+                """normalize_inference"""
                 if self.center:
                     inference_centred = inputs - K.reshape(self.moving_mean, broadcast_mu_shape)
                 else:

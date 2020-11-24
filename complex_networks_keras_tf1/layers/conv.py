@@ -1,18 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 """conv.py"""
-# pylint: disable=protected-access, consider-using-enumerate, too-many-lines
 
 #     Authors: Chiheb Trabelsi
 #
-#     @misc{dramsch2019complex, 
-#         title     = {Complex-Valued Neural Networks in Keras with Tensorflow}, 
-#         url       = {https://figshare.com/articles/Complex-Valued_Neural_Networks_in_Keras_with_Tensorflow/9783773/1}, 
-#         DOI       = {10.6084/m9.figshare.9783773}, 
-#         publisher = {figshare}, 
-#         author    = {Dramsch, Jesper S{\"o}ren and Contributors}, 
+#     @misc{dramsch2019complex,
+#         title     = {Complex-Valued Neural Networks in Keras with Tensorflow},
+#         url       = {https://figshare.com/articles/Complex-Valued_Neural_Networks_in_Keras_with_Tensorflow/9783773/1},
+#         DOI       = {10.6084/m9.figshare.9783773},
+#         publisher = {figshare},
+#         author    = {Dramsch, Jesper S{\"o}ren and Contributors},
 #         year      = {2019}
 #     }
+
+# pylint: disable=protected-access, consider-using-enumerate, bad-whitespace, no-else-return, invalid-name
+# pylint: disable=too-many-locals, too-many-lines, too-many-arguments, too-many-branches
+# pylint: disable=too-many-instance-attributes, too-many-statements
+# pylint: disable=arguments-differ
 
 from keras import backend as K
 from keras import initializers, regularizers, constraints
@@ -73,10 +78,10 @@ def conv_transpose_output_length(
         input_length, filter_size, padding, stride, dilation=1, output_padding=None):
     """Rearrange arguments for compatibility with conv_output_length."""
     if dilation != 1:
-        # msg = f"Dilation must be 1 for transposed convolution. "
-        # msg += f"Got dilation = {dilation}"
-        msg = "Dilation must be 1 for transposed convolution. "
-        msg += "Got dilation = {dilation}".format(dialtion = dilation)
+        msg = f"Dilation must be 1 for transposed convolution. "
+        msg += f"Got dilation = {dilation}"
+        # msg = "Dilation must be 1 for transposed convolution. "
+        # msg += "Got dilation = {dilation}".format(dialtion = dilation)
         raise ValueError(msg)
     return conv_utils.deconv_length(
         input_length,  # dim_size
@@ -280,9 +285,9 @@ class _ComplexConv(Layer):
             kern_init = self.kernel_initializer
 
         self.kernel = self.add_weight(
-            self.kernel_shape,
+            'kernel',  # name
+            self.kernel_shape,  # shape
             initializer=kern_init,
-            name='kernel',
             regularizer=self.kernel_regularizer,
             constraint=self.kernel_constraint,
         )
@@ -290,22 +295,22 @@ class _ComplexConv(Layer):
         if self.normalize_weight:
             gamma_shape = (input_dim * self.filters,)
             self.gamma_rr = self.add_weight(
-                shape=gamma_shape,
-                name='gamma_rr',
+                'gamma_rr',  # name
+                gamma_shape,  # shape
                 initializer=self.gamma_diag_initializer,
                 regularizer=self.gamma_diag_regularizer,
                 constraint=self.gamma_diag_constraint,
             )
             self.gamma_ii = self.add_weight(
-                shape=gamma_shape,
-                name='gamma_ii',
+                'gamma_ii',  # name
+                gamma_shape,  # shape
                 initializer=self.gamma_diag_initializer,
                 regularizer=self.gamma_diag_regularizer,
                 constraint=self.gamma_diag_constraint,
             )
             self.gamma_ri = self.add_weight(
-                shape=gamma_shape,
-                name='gamma_ri',
+                'gamma_ri',  # name
+                gamma_shape,  # shape
                 initializer=self.gamma_off_initializer,
                 regularizer=self.gamma_off_regularizer,
                 constraint=self.gamma_off_constraint,
@@ -318,9 +323,9 @@ class _ComplexConv(Layer):
         if self.use_bias:
             bias_shape = (2 * self.filters,)
             self.bias = self.add_weight(
-                bias_shape,
+                'bias',  # name
+                bias_shape,  # shape
                 initializer=self.bias_initializer,
-                name='bias',
                 regularizer=self.bias_regularizer,
                 constraint=self.bias_constraint,
             )
@@ -426,7 +431,7 @@ class _ComplexConv(Layer):
             Vrr = K.mean(reshaped_f_real_centred ** 2, axis=reduction_axes) + self.epsilon
             Vii = K.mean(reshaped_f_imag_centred ** 2, axis=reduction_axes) + self.epsilon
             Vri = K.mean(reshaped_f_real_centred * reshaped_f_imag_centred, axis=reduction_axes,
-            ) + self.epsilon
+                        ) + self.epsilon
 
             normalized_weight = complex_normalization(
                 K.concatenate([reshaped_f_real, reshaped_f_imag], axis=-1),
@@ -491,7 +496,7 @@ class _ComplexConv(Layer):
                 )
                 new_space.append(new_dim)
             return (input_shape[0],) + tuple(new_space) + (2 * self.filters,)
-        if self.data_format == 'channels_first':
+        else:
             space = input_shape[2:]
             new_space = []
             for i in range(len(space)):
@@ -983,8 +988,8 @@ class WeightNorm_Conv(_Conv):
         input_dim = input_shape[channel_axis]
         gamma_shape = (input_dim * self.filters,)
         self.gamma = self.add_weight(
-            shape=gamma_shape,
-            name='gamma',
+            'gamma',  # name
+            gamma_shape,  # shape
             initializer=self.gamma_initializer,
             regularizer=self.gamma_regularizer,
             constraint=self.gamma_constraint,

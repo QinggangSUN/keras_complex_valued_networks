@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+"""This module implements a number of popular one-dimensional complex valued ResNet models."""
+
 #  Authors: Qinggang Sun
 #
 #  Reference:
 #       Allen Goodman, Allen Goodman, Claire McQuin, Hans Gaiser, et al. keras-resnet
 #       https://github.com/broadinstitute/keras-resnet
+
+# pylint:disable=dangerous-default-value, keyword-arg-before-vararg, too-many-arguments, too-many-locals
+# pylint:disable=invalid-name, too-many-branches
 
 import keras
 import keras.backend as K
@@ -37,7 +42,8 @@ class ResNet2D(keras.Model):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
         >>> from .resnet_blocks_2d import block_func
@@ -52,28 +58,27 @@ class ResNet2D(keras.Model):
                              output_activation='sigmoid')
         >>> print(model.summary())
     """
-    def __init__(
-        self,
-        inputs,
-        num_blocks,
-        block_func,
-        activation='crelu',
-        n_filters=64,
-        pooling_func=['max', 'global_average'],
-        include_top=True,
-        classes=1000,
-        numerical_names=None,
-        output_activation=None,
-        *args,
-        **kwargs
-    ):
+    def __init__(self,
+                 inputs,
+                 num_blocks,
+                 block_func,
+                 activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation=None,
+                 *args,
+                 **kwargs
+                ):
         axis = -1 if keras.backend.image_data_format() == "channels_last" else 1
 
         if numerical_names is None:
             numerical_names = [True] * len(num_blocks)
 
-        x_complex = ComplexConv2D(n_filters, 7, strides=(2, 2), padding='same', use_bias=False, spectral_parametrization=False,
-                                  name='conv1')(inputs)
+        x_complex = ComplexConv2D(n_filters, 7, strides=(2, 2), padding='same', use_bias=False,
+                                  spectral_parametrization=False, name='conv1')(inputs)
 
         x_complex = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name='bn_conv1')(x_complex)
 
@@ -82,7 +87,8 @@ class ResNet2D(keras.Model):
         if pooling_func[0] == 'max':
             x_complex = ComplexMaxPooling2D(pool_size=(3, 3), strides=(2, 2), padding='same', name='pool1')(x_complex)
         elif pooling_func[0] == 'average':
-            x_complex = ComplexAveragePooling2D(pool_size=(3, 3), strides=(2, 2), padding='same', name='pool1')(x_complex)
+            x_complex = ComplexAveragePooling2D(pool_size=(3, 3), strides=(2, 2), padding='same',
+                                                name='pool1')(x_complex)
 
         outputs = []
 
@@ -150,7 +156,8 @@ class ResNet2D18(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -165,20 +172,20 @@ class ResNet2D18(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=basic_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=basic_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs
+                ):
 
         if num_blocks is None:
             num_blocks = [2, 2, 2, 2]
@@ -220,7 +227,8 @@ class ResNet2D34(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -235,20 +243,20 @@ class ResNet2D34(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=basic_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=basic_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs
+                ):
 
         if num_blocks is None:
             num_blocks = [3, 4, 6, 3]
@@ -290,7 +298,8 @@ class ResNet2D50(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -305,20 +314,20 @@ class ResNet2D50(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=bottleneck_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=bottleneck_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs
+                ):
 
         if num_blocks is None:
             num_blocks = [3, 4, 6, 3]
@@ -362,7 +371,8 @@ class ResNet2D101(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -377,20 +387,20 @@ class ResNet2D101(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=bottleneck_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=bottleneck_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs
+                ):
 
         if num_blocks is None:
             num_blocks = [3, 4, 23, 3]
@@ -434,7 +444,8 @@ class ResNet2D152(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -449,20 +460,20 @@ class ResNet2D152(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=bottleneck_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=bottleneck_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs
+                ):
 
         if num_blocks is None:
             num_blocks = [3, 8, 36, 3]
@@ -506,7 +517,8 @@ class ResNet2D200(ResNet2D):
 
     :param output_activation: int, activation of the output Dense layer of the classifer
 
-    :return model: ResNet model with encoding output (if `include_top=False`) or classification output (if `include_top=True`)
+    :return model: ResNet model with encoding output (if `include_top=False`) or classification
+        output (if `include_top=True`)
 
     Usage:
 
@@ -521,20 +533,19 @@ class ResNet2D200(ResNet2D):
     """
 
 
-    def __init__(
-            self,
-            inputs,
-            num_blocks=None,
-            block_func=bottleneck_2d,
-            conv_activation='crelu',
-            n_filters=64,
-            pooling_func=['max', 'global_average'],
-            include_top=True,
-            classes=1000,
-            numerical_names=None,
-            output_activation='sigmoid',
-            *args,
-            **kwargs):
+    def __init__(self,
+                 inputs,
+                 num_blocks=None,
+                 block_func=bottleneck_2d,
+                 conv_activation='crelu',
+                 n_filters=64,
+                 pooling_func=['max', 'global_average'],
+                 include_top=True,
+                 classes=1000,
+                 numerical_names=None,
+                 output_activation='sigmoid',
+                 *args,
+                 **kwargs):
 
         if num_blocks is None:
             num_blocks = [3, 24, 36, 3]
@@ -555,4 +566,3 @@ class ResNet2D200(ResNet2D):
             *args,
             **kwargs
         )
-

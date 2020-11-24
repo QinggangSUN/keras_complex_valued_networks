@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-This module implements a number of popular two-dimensional complex valued residual blocks.
-"""
+"""This module implements a number of popular two-dimensional complex valued residual blocks."""
 
 #  Authors: Qinggang Sun
 #
@@ -10,23 +8,25 @@ This module implements a number of popular two-dimensional complex valued residu
 #       Allen Goodman, Allen Goodman, Claire McQuin, Hans Gaiser, et al. keras-resnet
 #       https://github.com/broadinstitute/keras-resnet
 
-from ..layers.activations import layer_activation
-from ..layers.bn import ComplexBatchNormalization
-from ..layers.conv import ComplexConv3D
+# pylint:disable=too-many-arguments, invalid-name, unused-argument
 
 import keras.layers
 import keras.regularizers
 
-def basic_3d(
-    filters,
-    stage=0,
-    block=0,
-    kernel_size=3,
-    numerical_name=False,
-    stride=None,
-    activation='crelu',
-    **kwargs,
-):
+from ..layers.activations import layer_activation
+from ..layers.bn import ComplexBatchNormalization
+from ..layers.conv import ComplexConv3D
+
+
+def basic_3d(filters,
+             stage=0,
+             block=0,
+             kernel_size=3,
+             numerical_name=False,
+             stride=None,
+             activation='crelu',
+             **kwargs,
+            ):
     """
     A two-dimensional basic block.
 
@@ -40,7 +40,8 @@ def basic_3d(
 
     :param numerical_name: bool, if true, uses numbers to represent blocks instead of chars (ResNet{18, 34})
 
-    :param stride: int, representing the stride used in the shortcut and the first conv layer, default derives stride from block id
+    :param stride: int, representing the stride used in the shortcut and the first conv layer,
+        default derives stride from block id
 
     :param activation: str, the activation of convolution layer in residual blocks
 
@@ -66,12 +67,14 @@ def basic_3d(
     stage_char = str(stage + 2)
 
     def f(inputs, **kwargs):
+        """Method for block."""
         outputs = keras.layers.ZeroPadding3D(padding=1, name=f'padding{stage_char}{block_char}_branch2a')(inputs)
 
         outputs = ComplexConv3D(filters, kernel_size, strides=stride, use_bias=False, spectral_parametrization=False,
                                 name=f'res{stage_char}{block_char}_branch2a', **kwargs)(outputs)
 
-        outputs = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2a')(outputs)
+        outputs = ComplexBatchNormalization(
+            axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2a')(outputs)
 
         outputs = layer_activation(outputs, activation, name=f'res{stage_char}{block_char}_branch2a_{activation}')
 
@@ -80,13 +83,15 @@ def basic_3d(
         outputs = ComplexConv3D(filters, kernel_size, use_bias=False, spectral_parametrization=False,
                                 name=f'res{stage_char}{block_char}_branch2b', **kwargs)(outputs)
 
-        outputs = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2b')(outputs)
+        outputs = ComplexBatchNormalization(
+            axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2b')(outputs)
 
         if block == 0:
             shortcut = ComplexConv3D(filters, (1, 1), strides=stride, use_bias=False, spectral_parametrization=False,
                                      name=f'res{stage_char}{block_char}_branch1', **kwargs)(inputs)
 
-            shortcut = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch1')(shortcut)
+            shortcut = ComplexBatchNormalization(
+                axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch1')(shortcut)
         else:
             shortcut = inputs
 
@@ -99,16 +104,15 @@ def basic_3d(
     return f
 
 
-def bottleneck_3d(
-    filters,
-    stage=0,
-    block=0,
-    kernel_size=3,
-    numerical_name=False,
-    stride=None,
-    activation='crelu',
-    **kwargs,
-):
+def bottleneck_3d(filters,
+                  stage=0,
+                  block=0,
+                  kernel_size=3,
+                  numerical_name=False,
+                  stride=None,
+                  activation='crelu',
+                  **kwargs,
+                 ):
     """
     A two-dimensional bottleneck block.
 
@@ -122,7 +126,8 @@ def bottleneck_3d(
 
     :param numerical_name: bool, if true, uses numbers to represent blocks instead of chars (ResNet{101, 152, 200})
 
-    :param stride: int, representing the stride used in the shortcut and the first conv layer, default derives stride from block id
+    :param stride: int, representing the stride used in the shortcut and the first conv layer,
+        default derives stride from block id
 
     :param activation: str, the activation of convolution layer in residual blocks
 
@@ -149,10 +154,12 @@ def bottleneck_3d(
     stage_char = str(stage + 2)
 
     def f(inputs, **kwargs):
+        """Method for block."""
         outputs = ComplexConv3D(filters, 1, strides=stride, use_bias=False, spectral_parametrization=False,
                                 name=f'res{stage_char}{block_char}_branch2a', **kwargs)(inputs)
 
-        outputs = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2a')(outputs)
+        outputs = ComplexBatchNormalization(
+            axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2a')(outputs)
 
         outputs = layer_activation(outputs, activation, name=f'res{stage_char}{block_char}_branch2a_{activation}')
 
@@ -161,20 +168,23 @@ def bottleneck_3d(
         outputs = ComplexConv3D(filters, kernel_size, use_bias=False, spectral_parametrization=False,
                                 name=f'res{stage_char}{block_char}_branch2b', **kwargs)(outputs)
 
-        outputs = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2b')(outputs)
+        outputs = ComplexBatchNormalization(
+            axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2b')(outputs)
 
         outputs = layer_activation(outputs, activation, name=f'res{stage_char}{block_char}_branch2b_{activation}')
 
         outputs = ComplexConv3D(filters*4, 1, strides=(1, 1), use_bias=False, spectral_parametrization=False,
                                 name=f'res{stage_char}{block_char}_branch2c', **kwargs)(outputs)
 
-        outputs = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2c')(outputs)
+        outputs = ComplexBatchNormalization(
+            axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch2c')(outputs)
 
         if block == 0:
             shortcut = ComplexConv3D(filters*4, (1, 1), strides=stride, use_bias=False, spectral_parametrization=False,
                                      name=f'res{stage_char}{block_char}_branch1', **kwargs)(inputs)
 
-            shortcut = ComplexBatchNormalization(axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch1')(shortcut)
+            shortcut = ComplexBatchNormalization(
+                axis=axis, epsilon=1e-5, name=f'bn{stage_char}{block_char}_branch1')(shortcut)
         else:
             shortcut = inputs
 
